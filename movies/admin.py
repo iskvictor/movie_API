@@ -3,6 +3,10 @@ from .models import Category, Genre, Movie, MovieShots, Actor, Rating, RatingSta
 from django.utils.safestring import mark_safe
 from django import forms
 from ckeditor_uploader.widgets import CKEditorUploadingWidget
+# from import_export.admin import ImportExportActionModelAdmin
+# from import_export import resources
+# from import_export import fields
+# from import_export.widgets import ForeignKeyWidget, ManyToManyWidget
 
 
 class MovieAdminForm(forms.ModelForm):
@@ -99,6 +103,26 @@ class MovieAdmin(admin.ModelAdmin):
     unpublish.allowed_permissions = ('change',)
 
     get_image.short_description = "Постер"
+
+# class MovieResource(resources.ModelResource):
+#     # directors = fields.Field(column_name='directors', attribute='directors',
+#     #             widget=ManyToManyWidget(Actor, 'name'))
+#     # actors = fields.Field(column_name='actors', attribute='actors',
+#     #             widget=ManyToManyWidget(Actor, 'name'))
+#     # genres = fields.Field(column_name='genres', attribute='genres',
+#     #             widget=ManyToManyWidget(Genre, 'name'))
+#     category = fields.Field(column_name='category', attribute='category',
+#                 widget=ForeignKeyWidget(Category, 'name'))
+
+#     class Meta:
+#         model = Movie
+
+# @admin.register(Movie)
+# class MovieAdmin(ImportExportActionModelAdmin):
+#     resource_class = MovieResource
+#     list_display = ("title", "category", "url", "draft")
+#     inlines = [MovieShotsInline, ReviewInline]
+
 
 
 @admin.register(Review)
