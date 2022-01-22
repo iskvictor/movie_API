@@ -13,8 +13,8 @@ from .service import get_client_ip, MovieFilter
 
 class MovieListView(generics.ListAPIView):
     serializer_class = MovieListSerializer
-    filter_backends = (DjangoFilterBackend,)
-    filterset_class = MovieFilter
+    # filter_backends = (DjangoFilterBackend,)
+    # filterset_class = MovieFilter
     permission_classes =[permissions.IsAuthenticated]
 
     def get_queryset(self):
