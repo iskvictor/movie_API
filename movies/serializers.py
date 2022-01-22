@@ -1,12 +1,12 @@
 from rest_framework import serializers
-from .models import Movie, Review, Rating
+from .models import Movie, Review, Rating, Actor
 
 
-class MovieListSerializer(serializers.ModelSerializer):
-    """  Список фильмов """
-    class Meta:
-        model = Movie
-        fields = ("title", "tagline", "category")
+# class MovieListSerializer(serializers.ModelSerializer):
+#     """  Список фильмов """
+#     class Meta:
+#         model = Movie
+#         fields = ("title", "tagline", "category")
 
 class ReviewCreateSerializer(serializers.ModelSerializer):
 
@@ -28,6 +28,31 @@ class RecursiveSerializer(serializers.Serializer):
         return serializer.data
 
 
+class ActorListSerializer(serializers.ModelSerializer):
+    """ Вывод актеров и режиссеров"""
+    class Meta:
+        model = Actor
+        fields = ("id", "name", "image")
+
+
+class ActorDetailSerializer(serializers.ModelSerializer):
+    """ Вывод полного описания актеров и режиссеров"""
+    class Meta:
+        model = Actor
+        fields = "__all__"
+
+
+
+class MovieListSerializer(serializers.ModelSerializer):
+    """ Список фильмов """
+    rating_user = serializers.BooleanField()
+    middle_star = serializers.IntegerField()
+
+    class Meta:
+        model = Movie
+        fields = ("id", "title", "tagline", "category", "rating_user", "middle_star")
+
+
 class ReviewSerializer(serializers.ModelSerializer):
     children = RecursiveSerializer(many=True)
 
@@ -39,8 +64,8 @@ class ReviewSerializer(serializers.ModelSerializer):
 class MovieDetailSerializer(serializers.ModelSerializer):
     """  Список фильмов """
     category = serializers.SlugRelatedField(slug_field='name', read_only=True)
-    directors = serializers.SlugRelatedField(slug_field='name', read_only=True,  many=True)
-    actors = serializers.SlugRelatedField(slug_field='name', read_only=True,  many=True)
+    directors = ActorListSerializer(read_only=True,  many=True)
+    actors = ActorListSerializer(read_only=True,  many=True)
     genres = serializers.SlugRelatedField(slug_field='name', read_only=True,  many=True)
     reviews = ReviewSerializer(many=True)
     
@@ -56,7 +81,7 @@ class CreateRatingSerialiser(serializers.ModelSerializer):
         fields = ("star", "movie")
 
     def create(self, validated_data):
-        rating = Rating.objects.update_or_create(
+        rating, _ = Rating.objects.update_or_create(
             ip=validated_data.get("ip", None),
             movie=validated_data.get("movie", None),
             defaults={"star": validated_data.get("star")}
