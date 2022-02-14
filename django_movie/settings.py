@@ -47,7 +47,7 @@ INSTALLED_APPS = [
     'django_filters',
     'djoser',
     'drf_yasg',
-    'corsheaders'
+    'corsheaders',
 
     
 ]
@@ -87,16 +87,28 @@ WSGI_APPLICATION = 'django_movie.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-DATABASES = {
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'movie',
+#         'USER': 'iskvictor',
+#         'PASSWORD': '030307',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
+
+DATABASES = { 
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'movie',
-        'USER': 'iskvictor',
-        'PASSWORD': '030307',
-        'HOST': 'localhost',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': '123456',
+        'HOST': 'dm_db',
         'PORT': '5432',
     }
 }
+
 
 
 # Password validation
@@ -145,11 +157,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-CORS_ORIGINS_WHITELIST = [
-    "https://example.com",
-    "https://sub.example.com",
+CORS_ORIGIN_WHITELIST = [
     "http://localhost:8080",
-    "http://127.0.0.1:8080",
+    "http://localhost:8080",
+    "http://127.0.0.1:8000"
 ]
 
 CKEDITOR_UPLOAD_PATH = "uploads/"
@@ -268,3 +279,6 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
+
+
+ALLOWED_HOSTS = ['0.0.0.0']

@@ -14,8 +14,10 @@ class ReviewCreateSerializer(serializers.ModelSerializer):
         model = Review
         fields = "__all__"
 
+
 class FilterReviewListSerializer(serializers.ListSerializer):
     """ Вывод рекурсивно children """
+
     def to_representation(self, data):
         data = data.filter(parent=None)
         return super().to_representation(data)
@@ -23,6 +25,7 @@ class FilterReviewListSerializer(serializers.ListSerializer):
 
 class RecursiveSerializer(serializers.Serializer):
     """ Фильтр коментариев, только parent """
+
     def to_representation(self, value):
         serializer = self.parent.parent.__class__(value, context=self.context)
         return serializer.data
@@ -42,7 +45,6 @@ class ActorDetailSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-
 class MovieListSerializer(serializers.ModelSerializer):
     """ Список фильмов """
     rating_user = serializers.BooleanField()
@@ -50,7 +52,8 @@ class MovieListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Movie
-        fields = ("id", "title", "tagline", "category", "rating_user", "middle_star")
+        fields = ("id", "title", "tagline", "category",
+                  "rating_user", "middle_star", "poster")
 
 
 class ReviewSerializer(serializers.ModelSerializer):
@@ -59,16 +62,18 @@ class ReviewSerializer(serializers.ModelSerializer):
     class Meta:
         list_serializer_class = FilterReviewListSerializer
         model = Review
-        fields = ("name", "text", "children")
+        fields = ("name", "text", "children", "id")
+
 
 class MovieDetailSerializer(serializers.ModelSerializer):
     """  Список фильмов """
     category = serializers.SlugRelatedField(slug_field='name', read_only=True)
     directors = ActorListSerializer(read_only=True,  many=True)
     actors = ActorListSerializer(read_only=True,  many=True)
-    genres = serializers.SlugRelatedField(slug_field='name', read_only=True,  many=True)
+    genres = serializers.SlugRelatedField(
+        slug_field='name', read_only=True,  many=True)
     reviews = ReviewSerializer(many=True)
-    
+
     class Meta:
         model = Movie
         exclude = ("draft",)
@@ -87,4 +92,3 @@ class CreateRatingSerialiser(serializers.ModelSerializer):
             defaults={"star": validated_data.get("star")}
         )
         return rating
-
